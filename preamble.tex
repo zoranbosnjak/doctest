@@ -1,0 +1,96 @@
+\usepackage{colortbl}       % for tables
+\usepackage{paralist}       % for compact itemize
+\usepackage{bbding}         % for \PlusCenterOpen symbol
+\usepackage{minitoc}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage{ifthen}
+
+% okvir environment
+% TODO: reimplement 'okvir' environment without '\usepackage{fancybox}'
+\newenvironment{okvir}[1]{
+    \def\okvirWhat{#1}
+    \textbf{#1}:
+}{
+}
+
+% TOC at each chapter
+\let\originaltableofcontents\tableofcontents
+\renewcommand{\tableofcontents}{\dominitoc\originaltableofcontents}
+\let\originalchapter=\chapter
+\renewcommand*{\chapter}{%
+    \secdef{\Chap}{\ChapS}%
+}
+
+% start chapter on 'odd' page
+\newcommand\ChapS[1]{\originalchapter*{#1}\minitoc\cleardoublepage}
+\newcommand\Chap[2][]{\originalchapter[#1]{#2}\minitoc\cleardoublepage}
+
+% start section on new page
+\let\stdsection\section
+\renewcommand\section{\clearpage\stdsection}
+
+% change subsection style
+\let\originalsubsection\subsection
+\renewcommand{\subsection}[1]{\originalsubsection*{\PlusCenterOpen\ #1}}
+
+% change subsubsection style
+\let\originalsubsubsection\subsubsection
+\renewcommand{\subsubsection}[1]{\originalsubsubsection*{\OrnamentDiamondSolid\ #1}}
+
+% change paragraph style
+\let\originalparagraph\paragraph
+\renewcommand{\paragraph}[1]{\originalparagraph*{\FourStarOpen\ #1}}
+
+% redefine notice environment
+\newlength{\noticelength}
+\definecolor{bgcolor}{rgb}{0.96, 0.96, 0.89}
+
+% redefine procedure environment
+\definecolor{level1c}{RGB}{32,67,92}
+
+% second level itemize style
+\renewcommand{\labelitemi}{$\bullet$}
+\renewcommand{\labelitemii}{$\circ$}
+
+% don't break lines
+\hyphenpenalty 10000
+\exhyphenpenalty 10000
+
+\renewenvironment{sphinxadmonition}[2]{
+    \vspace{2mm}
+    \def\noticeType{#1}
+    \def\noticeWhat{#2}
+
+    \setlength{\fboxrule}{1pt}
+    \setlength{\fboxsep}{6pt}
+    \setlength{\noticelength}{\linewidth}
+    \addtolength{\noticelength}{-2\fboxsep}
+    \addtolength{\noticelength}{-2\fboxrule}
+
+    \newmdenv[
+        backgroundcolor=bgcolor,
+        linewidth=1.5pt,
+    ]{myframe}
+
+    % warning
+    \ifthenelse{\equal{\noticeType}{warning}}
+        {\begin{myframe}[linecolor=red]}
+    % note
+    {\ifthenelse{\equal{\noticeType}{note}}
+        {\begin{myframe}[linecolor=blue]}
+    % example
+    {\ifthenelse{\equal{\noticeType}{admonition}}
+        {\begin{myframe}[linecolor=orange]}
+    % other
+    {\begin{myframe}[linecolor=black]}}}
+
+    \minipage{\noticelength}
+
+    \textbf{#2}
+}{
+    \endminipage
+    \end{myframe}
+    \vspace{2mm}
+}
+
