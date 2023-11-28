@@ -7,9 +7,19 @@ Welcome to test's documentation!
 ================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 6
    :caption: Contents:
 
+   ch01/content
+   ch02/content
+   ch03/content
+   ch04/content
+   ch05/content
+   ch06/content
+   ch07/content
+   ch08/content
+   ch09/content
+   ch10/content
 
 
 Indices and tables
