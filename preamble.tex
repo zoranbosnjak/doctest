@@ -43,6 +43,7 @@
 
 % start chapter on 'odd' page
 \newcommand\ChapS[1]{\originalchapter*{#1}%
+                     \addcontentsline{toc}{chapter}{#1}%
                      \localtableofcontents
                      \cleardoublepage
 }
