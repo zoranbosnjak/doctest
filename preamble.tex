@@ -1,8 +1,29 @@
-\usepackage{colortbl}       % for tables
+% \usepackage{colortbl}     % for tables (not needed with current Sphinx)
 \usepackage{paralist}       % for compact itemize
 \usepackage{bbding}         % for \PlusCenterOpen symbol
-\usepackage{minitoc}
-\usepackage{xcolor}
+
+% TOC customization
+% - tocloft for avoiding overlap of chapter number
+% - etoc for local table of contents
+\usepackage{tocloft}% load it before etoc
+\setlength{\cftchapnumwidth}{2em}
+\setlength{\cftsecindent}{2em}
+\setlength{\cftsecnumwidth}{3.5em}
+\usepackage{etoc}
+\renewcommand\sphinxtableofcontentshook{}% prevent \sphinxtableofcontentshook
+                                         % overriding tocloft
+
+\let\originalsphinxtableofcontents=\sphinxtableofcontents
+\renewcommand{\sphinxtableofcontents}{%
+   \originalsphinxtableofcontents
+   \etocsettocstyle{}{}% tell local toc to not do do anything special before and
+                       % after local table of contents
+                       % This would be the place to do things such as
+                       % adding horizontal lines
+}
+
+% \usepackage{xcolor} % (this is done by Sphinx anyhow)
+
 \usepackage{mdframed}
 \usepackage{ifthen}
 
@@ -15,16 +36,20 @@
 }
 
 % TOC at each chapter
-\let\originaltableofcontents\tableofcontents
-\renewcommand{\tableofcontents}{\dominitoc\originaltableofcontents}
 \let\originalchapter=\chapter
 \renewcommand*{\chapter}{%
     \secdef{\Chap}{\ChapS}%
 }
 
 % start chapter on 'odd' page
-\newcommand\ChapS[1]{\originalchapter*{#1}\minitoc\cleardoublepage}
-\newcommand\Chap[2][]{\originalchapter[#1]{#2}\minitoc\cleardoublepage}
+\newcommand\ChapS[1]{\originalchapter*{#1}%
+                     \localtableofcontents
+                     \cleardoublepage
+}
+\newcommand\Chap[2][]{\originalchapter[#1]{#2}%
+                      \localtableofcontents
+                      \cleardoublepage
+                     }
 
 % start section on new page
 \let\stdsection\section
