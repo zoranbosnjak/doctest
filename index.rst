@@ -26,5 +26,9 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
+
+.. raw:: latex
+
+    \listoffigures
+    \listoftables
